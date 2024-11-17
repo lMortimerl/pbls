@@ -1,0 +1,4 @@
+constant foo = 15.2;
+constant bar = foo + 14.8;
+
+constant greater = foo > bar;

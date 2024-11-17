@@ -11,15 +11,16 @@ func parse_expr(p *parser, bp BindingPower) ast.Expr {
 	tokenKind := p.currentToken().Kind
 	nud_fn, exists := nud_lu[tokenKind]
 	if !exists {
-		panic(fmt.Sprintf("NUD HANDLER EXPECTED FOR TOKEN %s\n", lexer.TokenKindString(tokenKind)))
+		panic(fmt.Sprintf("1-NUD HANDLER EXPECTED FOR TOKEN %s\n", lexer.TokenKindString(tokenKind)))
 	}
 
 	left := nud_fn(p)
 	for bp_lu[p.currentToken().Kind] > bp {
 		tokenKind := p.currentToken().Kind
+		fmt.Printf("%s", lexer.TokenKindString(tokenKind))
 		led_fn, exists := led_lu[tokenKind]
 		if !exists {
-			panic(fmt.Sprintf("LED HANDLER EXPECTED FOR TOKEN %s\n", lexer.TokenKindString(tokenKind)))
+			panic(fmt.Sprintf("2-LED HANDLER EXPECTED FOR TOKEN %s\n", lexer.TokenKindString(tokenKind)))
 		}
 		left = led_fn(p, left, bp)
 	}

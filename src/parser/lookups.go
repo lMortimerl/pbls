@@ -43,8 +43,8 @@ func nud(kind lexer.TokenKind, bp BindingPower, nud_fn nud_handler) {
 	bp_lu[kind] = bp
 	nud_lu[kind] = nud_fn
 }
-func stmt(kind lexer.TokenKind, bp BindingPower, stmt_fn stmt_handler) {
-	bp_lu[kind] = bp
+func stmt(kind lexer.TokenKind, stmt_fn stmt_handler) {
+	bp_lu[kind] = default_bp
 	stmt_lu[kind] = stmt_fn
 }
 func createTokenLookups() {
@@ -54,8 +54,8 @@ func createTokenLookups() {
 
 	// Relational
 	led(lexer.LESS, relational, parse_binary_expr)
-	led(lexer.GREATER, relational, parse_binary_expr)
 	led(lexer.LESS_EQUAL, relational, parse_binary_expr)
+	led(lexer.GREATER, relational, parse_binary_expr)
 	led(lexer.GREATER_EQUAL, relational, parse_binary_expr)
 	led(lexer.EQUALS, relational, parse_binary_expr)
 	led(lexer.NOT_EQUALS, relational, parse_binary_expr)
@@ -73,4 +73,7 @@ func createTokenLookups() {
 	nud(lexer.NUMBER, primary, parse_primary_expr)
 	nud(lexer.STRING, primary, parse_primary_expr)
 	nud(lexer.IDENTIFIER, primary, parse_primary_expr)
+
+	// Statements
+	stmt(lexer.CONSTANT, parse_var_decl_stmt)
 }

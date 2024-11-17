@@ -17,3 +17,18 @@ func parse_stmt(p *parser) ast.Stmt {
 		Expr: expression,
 	}
 }
+
+func parse_var_decl_stmt(p *parser) ast.Stmt {
+	isConstant := p.advance().Kind == lexer.CONSTANT
+	varName := p.expectError(lexer.IDENTIFIER, "Expected varname after constant").Value
+
+	p.expectError(lexer.EQUALS, "Expected = after varname")
+	assignedValue := parse_expr(p, assignment)
+	p.expectError(lexer.SEMICOLON, "Expected Semicolon!")
+
+	return ast.VarDeclStmt{
+		Identifier:    varName,
+		IsConstant:    isConstant,
+		AssignedValue: assignedValue,
+	}
+}
