@@ -1,0 +1,15 @@
+string ls_sperre
+long ll_row
+string ls_test = "Hello, world!"
+
+ll_row = this.getrow()
+if ll_row <= 0 then return 0
+
+ls_sperre = this.getitemstring( ll_row, 'sperre_vfa')
+if ls_sperre = 'S' then
+	canedit(false, c.s_upd_forbid_info +  c.s_sperreallg_1_info )
+	candelete(false,c.s_del_forbid_info +  c.s_sperreallg_1_info)
+end if
+
+return 0
+
