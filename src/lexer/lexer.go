@@ -81,10 +81,10 @@ func skipHandler(lex *Lexer, regex *regexp.Regexp) {
 }
 func stringHandler(lex *Lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(lex.remainder())
-	stringLiteral := lex.remainder()[match[0]+1:match[1]-1]
+	stringLiteral := lex.remainder()[match[0]+1 : match[1]-1]
 
 	lex.push(NewToken(STRING, stringLiteral, lex.line, lex.column))
-	lex.advanceN(len(stringLiteral)+2)
+	lex.advanceN(len(stringLiteral) + 2)
 }
 func symbolHandler(lex *Lexer, regex *regexp.Regexp) {
 	match := regex.FindString(lex.remainder())
@@ -113,7 +113,7 @@ func NewLexer(source []byte) *Lexer {
 			{regexp.MustCompile(`"[^"]*"`), stringHandler},
 			{regexp.MustCompile(`'[^"]*'`), stringHandler},
 			{regexp.MustCompile(`\/\/.*`), skipHandler},
-			{regexp.MustCompile(`\/\*[^*\/]*\/`), skipHandler},
+			{regexp.MustCompile(`\/\*[\s\S]*?\*\/`), skipHandler},
 			{regexp.MustCompile(`\s+`), skipHandler},
 
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
