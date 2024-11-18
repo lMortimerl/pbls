@@ -1,0 +1,5 @@
+constant foo = -45.5;
+constant bar = foo * 10 + (45 / 10 - -5);
+foo += 10;
+constant foo: number = 10;
+constant bar: string = "ABC";

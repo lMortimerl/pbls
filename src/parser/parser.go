@@ -13,6 +13,7 @@ type parser struct {
 
 func NewParser(tokens []lexer.Token) *parser {
 	createTokenLookups()
+	createTypeTokenLookups()
 	return &parser{
 		tokens: tokens,
 	}

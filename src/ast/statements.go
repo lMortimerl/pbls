@@ -16,6 +16,7 @@ type VarDeclStmt struct {
 	Identifier    string
 	IsConstant    bool
 	AssignedValue Expr
+	ExplicitType  Type
 }
 
 func (n VarDeclStmt) stmt() {}
