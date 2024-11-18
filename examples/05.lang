@@ -1,0 +1,4 @@
+constant string lcs_str = "ABC";
+string ls_str = "ABC";
+int li_int = 0;
+long ll_long = 123123123;
