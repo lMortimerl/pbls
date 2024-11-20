@@ -1,0 +1,5 @@
+// int somevar = 15;
+int var1, var2, var3;
+string ls_var = "ABC";
+string ls_var1, ls_var2;
+constant string ls_var2;

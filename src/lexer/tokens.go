@@ -152,6 +152,8 @@ const (
 	WITHIN
 	XOR
 	_DEBUG
+
+	IDENTIFIER_TYPE
 )
 
 var reserved_lu map[string]TokenKind = map[string]TokenKind{
@@ -577,6 +579,8 @@ func TokenKindString(kind TokenKind) string {
 		return "xor"
 	case _DEBUG:
 		return "_debug"
+	case IDENTIFIER_TYPE:
+		return "identifier type"
 	default:
 		fmt.Printf("Unexpected Token %d", kind)
 	}

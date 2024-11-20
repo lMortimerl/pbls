@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	var sourceFilename string = ".\\examples\\05.lang"
+	var sourceFilename string = ".\\examples\\06.lang"
 	content, err := os.ReadFile(sourceFilename)
 	if err != nil {
 		fmt.Printf("Could not read the input file!\n%s", err)

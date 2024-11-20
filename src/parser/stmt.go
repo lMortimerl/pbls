@@ -18,56 +18,56 @@ func parse_stmt(p *parser) ast.Stmt {
 	}
 }
 
+func parse_comma_separated_declaration(p *parser, t ast.Type, varList []ast.VarDeclStmt) ast.Stmt {
+	for {
+		currTkn := p.advance()
+		if currTkn.Kind == lexer.COMMA {
+			continue
+		} else if currTkn.Kind == lexer.SEMICOLON {
+			break
+		}
+		varList = append(varList, ast.VarDeclStmt{
+			Identifier:    currTkn.Value,
+			IsConstant:    false,
+			AssignedValue: nil,
+			ExplicitType:  t,
+		})
+	}
+	return ast.MultiVarDeclStmt{
+		Stmts: varList,
+	}
+}
+
 func parse_var_decl_stmt(p *parser) ast.Stmt {
 	var isConstant bool = false
+	var currTkn lexer.Token = p.currentToken()
+	var varType ast.Type
 	var varValue ast.Expr
-	var possibleType ast.Type
-	if p.currentToken().Kind == lexer.CONSTANT {
-		p.advance()
-		isConstant = true
-	}
-	possibleType = parse_type(p, default_bp)
-	varName := p.advance()
-	if p.advance().Kind == lexer.EQUALS {
-		varValue = parse_expr(p, default_bp)
-	}
-	p.expectError(lexer.SEMICOLON, "Expected Semicolon")
 
-	return ast.VarDeclStmt{
+	if currTkn.Kind == lexer.CONSTANT {
+		isConstant = true
+		currTkn = p.advance()
+	}
+	varType = parse_type(p, default_bp)
+	var varName = p.advance()
+
+	var declaration ast.VarDeclStmt = ast.VarDeclStmt{
 		Identifier:    varName.Value,
 		IsConstant:    isConstant,
-		AssignedValue: varValue,
-		ExplicitType:  possibleType,
+		AssignedValue: nil,
+		ExplicitType:  varType,
 	}
-	/*
-	   var explicitType ast.Type
-	   var assignedValue ast.Expr
-	   isConstant := p.advance().Kind == lexer.CONSTANT
-	   varName := p.expectError(lexer.IDENTIFIER, "Expected varname after constant").Value
-
-	   if p.currentToken().Kind == lexer.COLON {
-	       p.advance()
-	       explicitType = parse_type(p, default_bp)
-	   }
-
-	   if p.currentToken().Kind != lexer.SEMICOLON {
-	       p.expectError(lexer.EQUALS, "Expected = after varname")
-	       assignedValue = parse_expr(p, assignment)
-	   } else if explicitType == nil {
-	       panic("Missing either righthand side in var declaration or explicit type.")
-	   }
-
-	   p.expectError(lexer.SEMICOLON, "Expected Semicolon!")
-
-	   if isConstant && assignedValue == nil {
-	       panic("Cannot define Constant without providing value")
-	   }
-
-	   return ast.VarDeclStmt{
-	       Identifier:    varName,
-	       IsConstant:    isConstant,
-	       AssignedValue: assignedValue,
-	       ExplicitType:  explicitType,
-	   }
-	*/
+	currTkn = p.advance()
+	if currTkn.Kind == lexer.COMMA {
+		return parse_comma_separated_declaration(p, varType, []ast.VarDeclStmt{declaration})
+	} else if currTkn.Kind == lexer.EQUALS {
+		varValue = parse_expr(p, default_bp)
+	} else if isConstant && p.currentToken().Kind == lexer.OPEN_BRACKET {
+		panic("PowerBuilder does not allow the use of constant arrays!")
+	} else if isConstant {
+		panic("Constants need to be initialized!")
+	}
+	p.expect(lexer.SEMICOLON)
+	declaration.AssignedValue = varValue
+	return declaration
 }

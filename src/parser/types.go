@@ -26,20 +26,11 @@ func type_nud(kind lexer.TokenKind, nud_fn type_nud_handler) {
 	type_nud_lu[kind] = nud_fn
 }
 func createTypeTokenLookups() {
-	type_nud(lexer.IDENTIFIER, parse_symbol_type)
-	type_nud(lexer.OPEN_BRACKET, parse_array_type)
+	type_nud(lexer.IDENTIFIER_TYPE, parse_symbol_type)
 }
 func parse_symbol_type(p *parser) ast.Type {
 	return ast.SymbolType{
-		Name: p.expect(lexer.IDENTIFIER).Value,
-	}
-}
-func parse_array_type(p *parser) ast.Type {
-	p.advance()
-	p.expect(lexer.CLOSE_BRACKET)
-	underlyingType := parse_type(p, default_bp)
-	return ast.ArrayType{
-		Underlying: underlyingType,
+		Name: p.expect(lexer.IDENTIFIER_TYPE).Value,
 	}
 }
 func parse_type(p *parser, bp BindingPower) ast.Type {

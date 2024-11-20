@@ -108,6 +108,10 @@ func NewLexer(source []byte) *Lexer {
 		source: string(source),
 		line:   1,
 		patterns: []regexPattern{
+			{regexp.MustCompile(`string`), defaultHandler(IDENTIFIER_TYPE, "string")},
+			{regexp.MustCompile(`int`), defaultHandler(IDENTIFIER_TYPE, "int")},
+			{regexp.MustCompile(`char`), defaultHandler(IDENTIFIER_TYPE, "char")},
+
 			{regexp.MustCompile(`[a-zA-Z_][a-zA-Z_0-9]*`), symbolHandler},
 			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
 			{regexp.MustCompile(`"[^"]*"`), stringHandler},

@@ -20,3 +20,9 @@ type VarDeclStmt struct {
 }
 
 func (n VarDeclStmt) stmt() {}
+
+type MultiVarDeclStmt struct {
+	Stmts []VarDeclStmt
+}
+
+func (n MultiVarDeclStmt) stmt() {}
