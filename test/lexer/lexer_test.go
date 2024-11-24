@@ -76,7 +76,7 @@ func TestStrings(t *testing.T) {
 }
 
 func TestMixedInput(t *testing.T) {
-	input := `if (x > 10) { return "done"; }`
+	input := "if (x > 10)\n{ return 'done'; }\r\n"
 	expected := []lexer.Token{
 		{Kind: lexer.IF, Value: "if", Line: 1, Column: 1},
 		{Kind: lexer.OPEN_PAREN, Value: "(", Line: 1, Column: 4},
@@ -84,12 +84,14 @@ func TestMixedInput(t *testing.T) {
 		{Kind: lexer.GREATER, Value: ">", Line: 1, Column: 7},
 		{Kind: lexer.NUMBER, Value: "10", Line: 1, Column: 9},
 		{Kind: lexer.CLOSE_PAREN, Value: ")", Line: 1, Column: 11},
-		{Kind: lexer.OPEN_CURLY, Value: "{", Line: 1, Column: 13},
-		{Kind: lexer.RETURN, Value: "return", Line: 1, Column: 15},
-		{Kind: lexer.STRING, Value: "done", Line: 1, Column: 22},
-		{Kind: lexer.SEMICOLON, Value: ";", Line: 1, Column: 28},
-		{Kind: lexer.CLOSE_CURLY, Value: "}", Line: 1, Column: 30},
-		{Kind: lexer.EOF, Value: "EOF", Line: 1, Column: 0},
+		{Kind: lexer.NEWLINE, Value: `n`, Line: 2, Column: 1},
+		{Kind: lexer.OPEN_CURLY, Value: "{", Line: 2, Column: 2},
+		{Kind: lexer.RETURN, Value: "return", Line: 2, Column: 4},
+		{Kind: lexer.STRING, Value: "done", Line: 2, Column: 11},
+		{Kind: lexer.SEMICOLON, Value: ";", Line: 2, Column: 17},
+		{Kind: lexer.CLOSE_CURLY, Value: "}", Line: 2, Column: 19},
+		{Kind: lexer.NEWLINE, Value: `rn`, Line: 2, Column: 20},
+		{Kind: lexer.EOF, Value: "EOF", Line: 2, Column: 0},
 	}
 
 	tokens := lexer.Tokenize([]byte(input))

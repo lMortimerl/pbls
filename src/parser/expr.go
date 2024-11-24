@@ -80,5 +80,10 @@ func parse_grouping_expr(p *parser) ast.Expr {
 	return expr
 }
 
+func parse_newline(p *parser) ast.Expr {
+	p.advance()
+	return nil
+}
+
 // TODO: ComputedExpression => array[index] | array[expr]
 // TODO: XX => const foo = [1, 2, 3]

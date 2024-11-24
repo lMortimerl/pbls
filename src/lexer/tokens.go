@@ -154,6 +154,7 @@ const (
 	_DEBUG
 
 	IDENTIFIER_TYPE
+	NEWLINE
 )
 
 var reserved_lu map[string]TokenKind = map[string]TokenKind{
@@ -581,6 +582,8 @@ func TokenKindString(kind TokenKind) string {
 		return "_debug"
 	case IDENTIFIER_TYPE:
 		return "identifier type"
+	case NEWLINE:
+		return "new line"
 	default:
 		fmt.Printf("Unexpected Token %d", kind)
 	}

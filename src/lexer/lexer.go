@@ -102,6 +102,14 @@ func defaultHandler(kind TokenKind, value string) regexHandler {
 		lex.advanceN(len(value))
 	}
 }
+func newLineHandler(kind TokenKind, value string) regexHandler {
+	return func(lex *Lexer, regex *regexp.Regexp) {
+		lex.push(NewToken(kind, value, lex.line, lex.column))
+		lex.advanceN(len(value))
+		lex.line++
+		lex.column = 1
+	}
+}
 func NewLexer(source []byte) *Lexer {
 	return &Lexer{
 		source: string(source),
@@ -109,16 +117,19 @@ func NewLexer(source []byte) *Lexer {
 		column: 1,
 		patterns: []regexPattern{
 			{regexp.MustCompile(`string`), defaultHandler(IDENTIFIER_TYPE, "string")},
+			{regexp.MustCompile(`long`), defaultHandler(IDENTIFIER_TYPE, "long")},
 			{regexp.MustCompile(`int`), defaultHandler(IDENTIFIER_TYPE, "int")},
 			{regexp.MustCompile(`char`), defaultHandler(IDENTIFIER_TYPE, "char")},
 
 			{regexp.MustCompile(`[a-zA-Z_][a-zA-Z_0-9]*`), symbolHandler},
 			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
 			{regexp.MustCompile(`"[^"]*"`), stringHandler},
-			{regexp.MustCompile(`'[^"]*'`), stringHandler},
+			{regexp.MustCompile(`'[^']*'`), stringHandler},
 			{regexp.MustCompile(`\/\/.*`), skipHandler},
 			{regexp.MustCompile(`\/\*[\s\S]*?\*\/`), skipHandler},
-			{regexp.MustCompile(`\s+`), skipHandler},
+			{regexp.MustCompile(`[ \t]+`), skipHandler},
+			{regexp.MustCompile(`\n`), defaultHandler(NEWLINE, "n")},
+			{regexp.MustCompile(`\r\n`), defaultHandler(NEWLINE, "rn")},
 
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
 			{regexp.MustCompile(`\]`), defaultHandler(CLOSE_BRACKET, "]")},

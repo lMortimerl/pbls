@@ -86,4 +86,6 @@ func createTokenLookups() {
 	// Statements
 	stmt(lexer.CONSTANT, parse_var_decl_stmt)
 	stmt(lexer.IDENTIFIER_TYPE, parse_var_decl_stmt)
+
+	nud(lexer.NEWLINE, parse_newline)
 }

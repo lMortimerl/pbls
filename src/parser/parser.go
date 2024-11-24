@@ -40,6 +40,10 @@ func (p *parser) advance() lexer.Token {
 	p.current++
 	return tkn
 }
+func (p *parser) peek() lexer.Token {
+	tkn := p.tokens[p.current+2]
+	return tkn
+}
 func (p *parser) hasTokens() bool {
 	return p.current < len(p.tokens) && p.currentToken().Kind != lexer.EOF
 }
@@ -56,6 +60,18 @@ func (p *parser) expectError(expectedKind lexer.TokenKind, err any) lexer.Token 
 	}
 
 	return p.advance()
+}
+func (p *parser) expectOneOf(expected ...lexer.TokenKind) lexer.Token {
+	token := p.currentToken()
+	kind := token.Kind
+	var joined string
+	for _, expectedKind := range expected {
+		joined += lexer.TokenKindString(expectedKind) + " "
+		if expectedKind == kind {
+			return p.advance()
+		}
+	}
+	panic(fmt.Sprintf("Expected one of '%s' but got '%s'", joined, lexer.TokenKindString(kind)))
 }
 func (p *parser) expect(expectedKind lexer.TokenKind) lexer.Token {
 	return p.expectError(expectedKind, nil)
